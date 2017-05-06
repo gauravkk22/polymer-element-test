@@ -1,0 +1,89 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id='api-element'>
+	<template>
+		<style>
+			*{
+				box-sizing: content-box;
+			}
+			:host{
+				color:white;
+				width:99vw;
+				height:auto;
+				display:flex;
+				flex-wrap: wrap;
+				align-items:center;
+				justify-content: center;
+				/*text-align: center;*/
+				font-size: 30px;
+				background: black;
+				letter-spacing: 2px;
+				font-weight: bolder;
+				overflow-x: hidden;
+			}
+			.item-name{
+				dispaly;flex;
+				width:100vw;
+				align-items: center;
+				justify-content: center;
+				height: auto;
+				margin: 10px 50px;
+			}
+			a:visited{
+				color: blue;
+			}
+			a:link{
+				color:#efefef;
+			}
+
+			a:hover{
+				color: white;
+			}
+
+			a:active{
+				color: yellow;
+			}
+		</style>
+        Repositories:
+        <template is="dom-repeat" id="item" items="[[repos]]">
+            <a href='#'  id="single" class="item-name">{{item.name}}</a>
+        </template>
+
+	<iron-ajax id="requestRepos" url="https://api.github.com/users/gauravkk22/repos" params='{"type":"all"}' handle-as="json" on-response="handleResponse">
+	</iron-ajax>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'api-element',
+			properties: {
+				repos: {
+					type: Array
+				},
+				selected_repo: {
+					type: Array
+				},
+				userName: {
+					type: String
+				}
+			},
+			ready: function() {
+				this.$.requestRepos.generateRequest();
+			},
+			attached: function() {
+				console.log('component attached', this.$.single);
+				var toLocal = document.createElement('div');
+				var text = document.createTextNode('added content with div');
+				toLocal.appendChild(text);
+				Polymer.dom(this.root).appendChild(toLocal);
+			},
+			handleResponse: function(data) {
+				console.log("My username is " + this.userName);
+				this.repos = data.detail.response;
+			},
+		});
+	</script>
+
+
+</dom-module>
